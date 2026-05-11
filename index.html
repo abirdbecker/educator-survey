@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educator Screens in Schools Survey — PA Unplugged</title>
+    <meta name="description" content="Share your perspective on technology and screen time in Pennsylvania schools. An educator survey from PA Unplugged.">
+    <meta property="og:title" content="Educator Screens in Schools Survey">
+    <meta property="og:description" content="PA K-12 educators: share your experiences with technology in the classroom. Help build a public dashboard of educator feedback.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Educator Screens in Schools Survey">
+    <meta name="twitter:description" content="Share your perspective on technology and screen time in Pennsylvania schools.">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f8f5f0;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .survey-container {
+            max-width: 860px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .survey-header {
+            background: #557a3e;
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .survey-header h1 { font-size: 1.8rem; font-weight: 600; margin-bottom: 10px; }
+        .survey-header p { opacity: 0.9; font-size: 1rem; }
+
+        .progress-container { background: #e8e4dc; height: 6px; width: 100%; }
+        .progress-bar { background: #557a3e; height: 100%; width: 0%; transition: width 0.4s ease; }
+        .progress-label {
+            text-align: center; padding: 8px 30px; font-size: 0.85rem;
+            color: #888; background: #faf9f7; border-bottom: 1px solid #e8e4dc;
+        }
+
+        .survey-body { padding: 30px; }
+        .section { margin-bottom: 40px; }
+        .section-title {
+            font-size: 1.1rem; font-weight: 600; color: #557a3e;
+            margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e8e4dc;
+        }
+
+        .question { margin-bottom: 28px; }
+        .question-label { display: block; font-weight: 500; color: #333; margin-bottom: 12px; font-size: 1rem; }
+        .required::after { content: " *"; color: #e74c3c; }
+        .optional-tag { font-size: 0.85rem; color: #888; font-weight: normal; }
+        .question-note { font-size: 0.9rem; color: #666; margin-bottom: 12px; font-style: italic; }
+
+        .options-list { display: flex; flex-direction: column; gap: 10px; }
+        .option-item {
+            display: flex; align-items: flex-start; gap: 10px; padding: 12px 15px;
+            background: #f8f9fa; border-radius: 8px; cursor: pointer;
+            transition: all 0.2s; border: 2px solid transparent;
+        }
+        .option-item:hover { background: #eef5ea; border-color: #557a3e; }
+        .option-item input[type="radio"],
+        .option-item input[type="checkbox"] { margin-top: 3px; width: 18px; height: 18px; cursor: pointer; }
+        .option-item label { cursor: pointer; flex: 1; }
+        .option-item .option-description { display: block; font-size: 0.85rem; color: #666; margin-top: 4px; }
+
+        .grade-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+        .grade-grid .option-item { padding: 10px 12px; }
+
+        .search-select-container { position: relative; }
+        .search-input {
+            width: 100%; padding: 12px 15px; border: 2px solid #557a3e;
+            border-radius: 8px; font-size: 1rem; margin-bottom: 5px;
+        }
+        .search-input:focus { outline: none; }
+        .dropdown-list {
+            position: absolute; top: 100%; left: 0; right: 0; max-height: 250px;
+            overflow-y: auto; background: white; border: 2px solid #557a3e;
+            border-top: none; border-radius: 0 0 8px 8px; z-index: 100; display: none;
+        }
+        .dropdown-list.open { display: block; }
+        .dropdown-item { padding: 10px 15px; cursor: pointer; transition: background 0.15s; }
+        .dropdown-item:hover { background: #eef5ea; }
+        .dropdown-item.selected { background: #557a3e; color: white; }
+
+        input[type="text"], input[type="email"], textarea {
+            width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0;
+            border-radius: 8px; font-size: 1rem; font-family: inherit; transition: border-color 0.2s;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, textarea:focus { outline: none; border-color: #557a3e; }
+        textarea { min-height: 100px; resize: vertical; }
+
+        .conditional { display: none; animation: fadeIn 0.3s ease; }
+        .conditional.visible { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .likert-scale { display: flex; flex-direction: column; gap: 8px; }
+        .likert-scale .option-item { padding: 10px 15px; }
+
+        .submit-btn {
+            width: 100%; padding: 16px 30px; background: #557a3e; color: white;
+            border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600;
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(85, 122, 62, 0.4); }
+        .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .success-message { display: none; text-align: center; padding: 60px 30px; }
+        .success-message.visible { display: block; }
+        .success-icon {
+            width: 80px; height: 80px; background: #557a3e; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+        }
+        .success-icon svg { width: 40px; height: 40px; fill: white; }
+        .success-message h2 { color: #557a3e; margin-bottom: 10px; }
+
+        .validation-error { color: #e74c3c; font-size: 0.85rem; margin-top: 6px; display: none; }
+        .validation-error.visible { display: block; }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .survey-header { padding: 30px 20px; }
+            .survey-header h1 { font-size: 1.4rem; }
+            .survey-body { padding: 20px; }
+            .grade-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="survey-container">
+        <div class="survey-header">
+            <h1>Educator Screens in Schools Survey</h1>
+            <p>A survey for Pennsylvania K–12 educators</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-label" id="progressLabel">Section 1 of 5</div>
+
+        <div class="survey-body">
+            <div class="intro-section" style="margin-bottom: 30px; padding: 20px; background: #f0ebe3; border-radius: 8px; border-left: 4px solid #557a3e;">
+                <p style="margin-bottom: 12px;"><strong>Welcome!</strong></p>
+                <p style="margin-bottom: 12px;"><a href="https://paunplugged.org" style="color: #557a3e;">PA Unplugged</a> is conducting an Educator Screens in Schools Survey open to all Pennsylvania K–12 educators in public, private, and charter schools. The goal of this survey is to give parents/caregivers, educators, and policymakers a clearer picture of how teachers are thinking about these important issues.</p>
+                <p style="margin-bottom: 12px;">We are gathering feedback about your experiences using technology in your classroom and across the school. Some aspects of technology use are determined at the school level, while others are shaped by district-wide policies. Your input will help inform school-based decision-making as well as broader statewide advocacy efforts.</p>
+                <p style="margin-bottom: 12px;">Your responses will help us build an anonymized public dashboard where you can explore and compare feedback across school districts throughout the state. To protect your privacy, demographic data visible on the dashboard will be shared only in aggregate, broken down by school district and grade level categories (K–2, 3–5, 6–8, and 9–12).</p>
+                <p style="margin-bottom: 12px;">You can review the parent/caregiver companion survey results at <a href="https://dashboard.paunplugged.org" style="color: #557a3e;">dashboard.paunplugged.org</a>.</p>
+                <p style="margin-bottom: 0;">Please complete this survey by <strong>July 15, 2026</strong>. If you have questions, reach out at <a href="mailto:hello@paunplugged.org" style="color: #557a3e;">hello@paunplugged.org</a>.</p>
+            </div>
+
+            <form id="surveyForm">
+                <!-- ============ SECTION 1: Teacher Information ============ -->
+                <div class="section" data-section="1">
+                    <h2 class="section-title">Section 1: Teacher Information</h2>
+
+                    <!-- School Type -->
+                    <div class="question">
+                        <span class="question-label required">What kind of school do you teach in?</span>
+                        <p class="question-note">For teachers in multiple settings, please complete one response per school/district.</p>
+                        <div class="options-list">
+                            <div class="option-item"><input type="radio" name="schoolType" id="st-public" value="Public school" required><label for="st-public">Public school</label></div>
+                            <div class="option-item"><input type="radio" name="schoolType" id="st-private" value="Private/Independent school"><label for="st-private">Private/Independent school</label></div>
+                            <div class="option-item"><input type="radio" name="schoolType" id="st-charter" value="Charter school"><label for="st-charter">Charter school</label></div>
+                        </div>
+                    </div>
+
+                    <!-- County -->
+                    <div class="question conditional" id="countyQuestion">
+                        <span class="question-label required">What county is your school located in?</span>
+                        <div class="search-select-container" id="countyContainer">
+                            <input type="text" class="search-input" id="countySearch" placeholder="Type to search counties..." autocomplete="off">
+                            <div class="dropdown-list" id="countyDropdown"></div>
+                            <input type="hidden" name="county" id="countyValue">
+                        </div>
+                        <div class="validation-error" id="countyError">Please select a county.</div>
+                    </div>
+
+                    <!-- District (public) -->
+                    <div class="question conditional" id="districtQuestion">
+                        <span class="question-label required">What is your school district?</span>
+                        <div class="search-select-container" id="districtContainer">
+                            <input type="text" class="search-input" id="districtSearch" placeholder="Type to search districts..." autocomplete="off">
+                            <div class="dropdown-list" id="districtDropdown"></div>
+                            <input type="hidden" name="district" id="districtValue">
+                        </div>
+                        <div class="validation-error" id="districtError">Please select a school district.</div>
+                    </div>
+
+                    <!-- District Other -->
+                    <div class="question conditional" id="districtOtherQuestion">
+                        <span class="question-label">Please specify your school district:</span>
+                        <input type="text" name="districtOther" id="districtOther" placeholder="Enter your school district name">
+                    </div>
+
+                    <!-- School Name (private/charter) -->
+                    <div class="question conditional" id="schoolNameQuestion">
+                        <span class="question-label required">What is the name of your school?</span>
+                        <input type="text" name="schoolName" id="schoolName" placeholder="Enter your school name">
+                    </div>
+
+                    <!-- Years Teaching -->
+                    <div class="question">
+                        <span class="question-label required">How many years have you been a practicing, certified teacher in any setting?</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="radio" name="yearsTeaching" id="yt-1" value="0-5" required><label for="yt-1">0–5</label></div>
+                            <div class="option-item"><input type="radio" name="yearsTeaching" id="yt-2" value="6-10"><label for="yt-2">6–10</label></div>
+                            <div class="option-item"><input type="radio" name="yearsTeaching" id="yt-3" value="11-15"><label for="yt-3">11–15</label></div>
+                            <div class="option-item"><input type="radio" name="yearsTeaching" id="yt-4" value="15+"><label for="yt-4">15+</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Grade Levels -->
+                    <div class="question">
+                        <span class="question-label required">What grade level(s) do you currently teach? (Check all that apply)</span>
+                        <div class="options-list grade-grid">
+                            <div class="option-item"><input type="checkbox" name="gradeLevels" id="gl-k2" value="K-2"><label for="gl-k2">K–2</label></div>
+                            <div class="option-item"><input type="checkbox" name="gradeLevels" id="gl-35" value="3-5"><label for="gl-35">3–5</label></div>
+                            <div class="option-item"><input type="checkbox" name="gradeLevels" id="gl-68" value="6-8"><label for="gl-68">6–8</label></div>
+                            <div class="option-item"><input type="checkbox" name="gradeLevels" id="gl-912" value="9-12"><label for="gl-912">9–12</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Subjects -->
+                    <div class="question">
+                        <span class="question-label required">What subject(s) do you teach? (Check all that apply)</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="checkbox" name="subjects" id="subj-gened" value="General Education (all subjects)"><label for="subj-gened">General Education (all subjects)</label></div>
+                            <div class="option-item"><input type="checkbox" name="subjects" id="subj-ela" value="ELA / Reading / Writing"><label for="subj-ela">ELA / Reading / Writing</label></div>
+                            <div class="option-item"><input type="checkbox" name="subjects" id="subj-math" value="Math"><label for="subj-math">Math</label></div>
+                            <div class="option-item"><input type="checkbox" name="subjects" id="subj-science" value="Science"><label for="subj-science">Science</label></div>
+                            <div class="option-item"><input type="checkbox" name="subjects" id="subj-social" value="Social Studies / History"><label for="subj-social">Social Studies / History</label></div>
+                            <div class="option-item"><input type="checkbox" name="subjects" id="subj-sped" value="Special Education"><label for="subj-sped">Special Education</label></div>
+                            <div class="option-item"><input type="checkbox" name="subjects" id="subj-life" value="Life Skills"><label for="subj-life">Life Skills</label></div>
+                            <div class="option-item"><input type="checkbox" name="subjects" id="subj-arts" value="Art / Music / Theater"><label for="subj-arts">Art / Music / Theater</label></div>
+                            <div class="option-item"><input type="checkbox" name="subjects" id="subj-pe" value="Physical Education / Health"><label for="subj-pe">Physical Education / Health</label></div>
+                            <div class="option-item"><input type="checkbox" name="subjects" id="subj-lang" value="World Languages"><label for="subj-lang">World Languages</label></div>
+                            <div class="option-item"><input type="checkbox" name="subjects" id="subj-tech" value="Technology / Computer Science"><label for="subj-tech">Technology / Computer Science</label></div>
+                            <div class="option-item"><input type="checkbox" name="subjects" id="subj-cte" value="CTE / Business / Career Education"><label for="subj-cte">CTE / Business / Career Education</label></div>
+                            <div class="option-item"><input type="checkbox" name="subjects" id="subj-other" value="Other"><label for="subj-other">Other</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Subjects Other -->
+                    <div class="question conditional" id="subjectsOtherQuestion">
+                        <span class="question-label">Please specify:</span>
+                        <input type="text" name="subjectsOther" id="subjectsOther" placeholder="Describe your subject area...">
+                    </div>
+
+                    <!-- 1:1 Devices -->
+                    <div class="question">
+                        <span class="question-label required">My district utilizes 1-to-1 electronic devices in the grade level(s) I teach:</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="radio" name="hasOneToOne" id="oto-yes" value="Yes" required><label for="oto-yes">Yes</label></div>
+                            <div class="option-item"><input type="radio" name="hasOneToOne" id="oto-no" value="No"><label for="oto-no">No</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Device Type (conditional on Yes) -->
+                    <div class="question conditional" id="deviceTypeQuestion">
+                        <span class="question-label required">If your district utilizes 1-to-1 electronic devices, which device do they use?</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="radio" name="deviceType" id="dt-chromebook" value="Chromebook"><label for="dt-chromebook">Chromebook</label></div>
+                            <div class="option-item"><input type="radio" name="deviceType" id="dt-ipad" value="iPad"><label for="dt-ipad">iPad</label></div>
+                            <div class="option-item"><input type="radio" name="deviceType" id="dt-other" value="Other"><label for="dt-other">Other (please specify)</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Device Type Other -->
+                    <div class="question conditional" id="deviceTypeOtherQuestion">
+                        <span class="question-label">Please specify:</span>
+                        <input type="text" name="deviceTypeOther" id="deviceTypeOther" placeholder="Describe the device...">
+                    </div>
+                </div>
+
+                <!-- ============ SECTION 2: Technology Use in School ============ -->
+                <div class="section" data-section="2">
+                    <h2 class="section-title">Section 2: Technology Use in School</h2>
+
+                    <!-- Q: Positive impact -->
+                    <div class="question">
+                        <span class="question-label required">School-issued devices have a positive impact on student learning in my classroom.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="positiveImpact" id="pi-1" value="Strongly disagree" required><label for="pi-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="positiveImpact" id="pi-2" value="Somewhat disagree"><label for="pi-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="positiveImpact" id="pi-3" value="Neither agree nor disagree"><label for="pi-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="positiveImpact" id="pi-4" value="Somewhat agree"><label for="pi-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="positiveImpact" id="pi-5" value="Strongly agree"><label for="pi-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Appropriate time -->
+                    <div class="question">
+                        <span class="question-label required">Students spend an appropriate amount of time on devices during the school day.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="appropriateTime" id="at-1" value="Strongly disagree" required><label for="at-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="appropriateTime" id="at-2" value="Somewhat disagree"><label for="at-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="appropriateTime" id="at-3" value="Neither agree nor disagree"><label for="at-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="appropriateTime" id="at-4" value="Somewhat agree"><label for="at-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="appropriateTime" id="at-5" value="Strongly agree"><label for="at-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Differentiate instruction -->
+                    <div class="question">
+                        <span class="question-label required">Technology enhances my ability to differentiate instruction.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="differentiateInstruction" id="di-1" value="Strongly disagree" required><label for="di-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="differentiateInstruction" id="di-2" value="Somewhat disagree"><label for="di-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="differentiateInstruction" id="di-3" value="Neither agree nor disagree"><label for="di-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="differentiateInstruction" id="di-4" value="Somewhat agree"><label for="di-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="differentiateInstruction" id="di-5" value="Strongly agree"><label for="di-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Prefer print -->
+                    <div class="question">
+                        <span class="question-label required">I would prefer to incorporate more print-based materials (e.g., textbooks, handwriting, paper-based tasks).</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="preferPrint" id="pp-1" value="Strongly disagree" required><label for="pp-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="preferPrint" id="pp-2" value="Somewhat disagree"><label for="pp-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="preferPrint" id="pp-3" value="Neither agree nor disagree"><label for="pp-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="preferPrint" id="pp-4" value="Somewhat agree"><label for="pp-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="preferPrint" id="pp-5" value="Strongly agree"><label for="pp-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: No print available -->
+                    <div class="question">
+                        <span class="question-label required">My district has chosen a curriculum that no longer offers print textbooks, workbooks, or assignments for the classes and subjects I teach.</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="radio" name="noPrintAvailable" id="npa-yes" value="Yes" required><label for="npa-yes">Yes</label></div>
+                            <div class="option-item"><input type="radio" name="noPrintAvailable" id="npa-no" value="No"><label for="npa-no">No</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Subscription programs -->
+                    <div class="question">
+                        <span class="question-label required">Subscription-based learning programs (e.g., iReady, IXL, Imagine Math) are beneficial for my students.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="subscriptionBeneficial" id="sb-1" value="Strongly disagree" required><label for="sb-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="subscriptionBeneficial" id="sb-2" value="Somewhat disagree"><label for="sb-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="subscriptionBeneficial" id="sb-3" value="Neither agree nor disagree"><label for="sb-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="subscriptionBeneficial" id="sb-4" value="Somewhat agree"><label for="sb-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="subscriptionBeneficial" id="sb-5" value="Strongly agree"><label for="sb-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Mandate usage -->
+                    <div class="question">
+                        <span class="question-label required">Does your district have a mandate on how often or how much time (per day or week) that students must spend on these types of programs?</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="radio" name="mandateUsage" id="mu-yes" value="Yes" required><label for="mu-yes">Yes</label></div>
+                            <div class="option-item"><input type="radio" name="mandateUsage" id="mu-no" value="No"><label for="mu-no">No</label></div>
+                            <div class="option-item"><input type="radio" name="mandateUsage" id="mu-na" value="N/A - my school does not use these programs"><label for="mu-na">N/A — my school does not use these programs</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Mandate details (conditional) -->
+                    <div class="question conditional" id="mandateDetailsQuestion">
+                        <span class="question-label">Please share more information:</span>
+                        <textarea name="mandateDetails" id="mandateDetails" placeholder="Describe the mandate..."></textarea>
+                    </div>
+
+                    <!-- Q: AI student learning -->
+                    <div class="question">
+                        <span class="question-label required">AI tools should be integrated into student learning.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="aiStudentLearning" id="asl-1" value="Strongly disagree" required><label for="asl-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="aiStudentLearning" id="asl-2" value="Somewhat disagree"><label for="asl-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="aiStudentLearning" id="asl-3" value="Neither agree nor disagree"><label for="asl-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="aiStudentLearning" id="asl-4" value="Somewhat agree"><label for="asl-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="aiStudentLearning" id="asl-5" value="Strongly agree"><label for="asl-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: AI teacher workflow -->
+                    <div class="question">
+                        <span class="question-label required">AI tools should be available to support teacher workflow (e.g., grading support, lesson planning).</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="aiTeacherWorkflow" id="atw-1" value="Strongly disagree" required><label for="atw-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="aiTeacherWorkflow" id="atw-2" value="Somewhat disagree"><label for="atw-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="aiTeacherWorkflow" id="atw-3" value="Neither agree nor disagree"><label for="atw-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="aiTeacherWorkflow" id="atw-4" value="Somewhat agree"><label for="atw-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="aiTeacherWorkflow" id="atw-5" value="Strongly agree"><label for="atw-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Device monitored -->
+                    <div class="question">
+                        <span class="question-label required">Student device use is appropriately monitored and managed at school.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="deviceMonitored" id="dm-1" value="Strongly disagree" required><label for="dm-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="deviceMonitored" id="dm-2" value="Somewhat disagree"><label for="dm-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="deviceMonitored" id="dm-3" value="Neither agree nor disagree"><label for="dm-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="deviceMonitored" id="dm-4" value="Somewhat agree"><label for="dm-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="deviceMonitored" id="dm-5" value="Strongly agree"><label for="dm-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Clear procedures -->
+                    <div class="question">
+                        <span class="question-label required">I have a clear understanding of school procedures for responsible device use.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="clearProcedures" id="cp-1" value="Strongly disagree" required><label for="cp-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="clearProcedures" id="cp-2" value="Somewhat disagree"><label for="cp-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="clearProcedures" id="cp-3" value="Neither agree nor disagree"><label for="cp-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="clearProcedures" id="cp-4" value="Somewhat agree"><label for="cp-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="clearProcedures" id="cp-5" value="Strongly agree"><label for="cp-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Consistent procedures -->
+                    <div class="question">
+                        <span class="question-label required">I feel confident that teachers throughout my building are following the same procedures regarding device use.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="consistentProcedures" id="cop-1" value="Strongly disagree" required><label for="cop-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="consistentProcedures" id="cop-2" value="Somewhat disagree"><label for="cop-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="consistentProcedures" id="cop-3" value="Neither agree nor disagree"><label for="cop-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="consistentProcedures" id="cop-4" value="Somewhat agree"><label for="cop-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="consistentProcedures" id="cop-5" value="Strongly agree"><label for="cop-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Tech forward -->
+                    <div class="question">
+                        <span class="question-label required">How much technology would you like to see used in your classroom moving forward?</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="radio" name="techForward" id="tf-more" value="More" required><label for="tf-more">More</label></div>
+                            <div class="option-item"><input type="radio" name="techForward" id="tf-less" value="Less"><label for="tf-less">Less</label></div>
+                            <div class="option-item"><input type="radio" name="techForward" id="tf-same" value="About the same"><label for="tf-same">About the same</label></div>
+                            <div class="option-item"><input type="radio" name="techForward" id="tf-unsure" value="Unsure"><label for="tf-unsure">Unsure</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Class time on devices -->
+                    <div class="question">
+                        <span class="question-label required">How much class time do you believe students should spend using devices on a typical day?</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="radio" name="classTimeDevices" id="ctd-1" value="Less than 30 minutes" required><label for="ctd-1">Less than 30 minutes</label></div>
+                            <div class="option-item"><input type="radio" name="classTimeDevices" id="ctd-2" value="30 minutes - 1 hour"><label for="ctd-2">30 minutes – 1 hour</label></div>
+                            <div class="option-item"><input type="radio" name="classTimeDevices" id="ctd-3" value="1-2 hours"><label for="ctd-3">1–2 hours</label></div>
+                            <div class="option-item"><input type="radio" name="classTimeDevices" id="ctd-4" value="2-3 hours"><label for="ctd-4">2–3 hours</label></div>
+                            <div class="option-item"><input type="radio" name="classTimeDevices" id="ctd-5" value="Depends on grade level"><label for="ctd-5">Depends on grade level</label></div>
+                            <div class="option-item"><input type="radio" name="classTimeDevices" id="ctd-6" value="Unsure"><label for="ctd-6">Unsure</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Class time clarify (conditional) -->
+                    <div class="question conditional" id="classTimeClarifyQuestion">
+                        <span class="question-label">Please clarify:</span>
+                        <textarea name="classTimeClarify" id="classTimeClarify" placeholder="Share your thoughts..."></textarea>
+                    </div>
+
+                    <!-- Q: Digital literacy topics -->
+                    <div class="question">
+                        <span class="question-label required">What topics related to digital literacy should be emphasized at school? (Check all that apply)</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="checkbox" name="digitalLiteracy" id="dl-cognitive" value="Cognitive and developmental impacts of technology and AI"><label for="dl-cognitive">Cognitive and developmental impacts of technology and AI</label></div>
+                            <div class="option-item"><input type="checkbox" name="digitalLiteracy" id="dl-safety" value="Online safety"><label for="dl-safety">Online safety</label></div>
+                            <div class="option-item"><input type="checkbox" name="digitalLiteracy" id="dl-cyberbullying" value="Cyberbullying prevention"><label for="dl-cyberbullying">Cyberbullying prevention</label></div>
+                            <div class="option-item"><input type="checkbox" name="digitalLiteracy" id="dl-screentime" value="Managing screen time"><label for="dl-screentime">Managing screen time</label></div>
+                            <div class="option-item"><input type="checkbox" name="digitalLiteracy" id="dl-privacy" value="Digital privacy"><label for="dl-privacy">Digital privacy</label></div>
+                            <div class="option-item"><input type="checkbox" name="digitalLiteracy" id="dl-evaluating" value="Evaluating online information"><label for="dl-evaluating">Evaluating online information</label></div>
+                            <div class="option-item"><input type="checkbox" name="digitalLiteracy" id="dl-ai" value="Responsible use of AI"><label for="dl-ai">Responsible use of AI</label></div>
+                            <div class="option-item"><input type="checkbox" name="digitalLiteracy" id="dl-socialmedia" value="Social and psychological effects of social media"><label for="dl-socialmedia">Social and psychological effects of social media</label></div>
+                            <div class="option-item"><input type="checkbox" name="digitalLiteracy" id="dl-other" value="Other"><label for="dl-other">Other</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Digital literacy other (conditional) -->
+                    <div class="question conditional" id="digitalLiteracyOtherQuestion">
+                        <span class="question-label">Please specify:</span>
+                        <input type="text" name="digitalLiteracyOther" id="digitalLiteracyOther" placeholder="Describe...">
+                    </div>
+
+                    <!-- Q: Confident teaching safety -->
+                    <div class="question">
+                        <span class="question-label required">I feel confident teaching students about safe and responsible online behavior.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="confidentTeachingSafety" id="cts-1" value="Strongly disagree" required><label for="cts-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="confidentTeachingSafety" id="cts-2" value="Somewhat disagree"><label for="cts-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="confidentTeachingSafety" id="cts-3" value="Neither agree nor disagree"><label for="cts-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="confidentTeachingSafety" id="cts-4" value="Somewhat agree"><label for="cts-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="confidentTeachingSafety" id="cts-5" value="Strongly agree"><label for="cts-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Adequate PD -->
+                    <div class="question">
+                        <span class="question-label required">I feel I have received adequate professional development related to effective technology use and the cognitive impacts and potential harmful effects of screen time.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="adequatePD" id="apd-1" value="Strongly disagree" required><label for="apd-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="adequatePD" id="apd-2" value="Somewhat disagree"><label for="apd-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="adequatePD" id="apd-3" value="Neither agree nor disagree"><label for="apd-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="adequatePD" id="apd-4" value="Somewhat agree"><label for="apd-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="adequatePD" id="apd-5" value="Strongly agree"><label for="apd-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Interested AI training -->
+                    <div class="question">
+                        <span class="question-label required">I would be interested in training on how to better use AI tools and managing AI tools responsibly in the classroom.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="interestedAITraining" id="iat-1" value="Strongly disagree" required><label for="iat-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="interestedAITraining" id="iat-2" value="Somewhat disagree"><label for="iat-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="interestedAITraining" id="iat-3" value="Neither agree nor disagree"><label for="iat-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="interestedAITraining" id="iat-4" value="Somewhat agree"><label for="iat-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="interestedAITraining" id="iat-5" value="Strongly agree"><label for="iat-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ SECTION 3: Statewide Testing ============ -->
+                <div class="section" data-section="3">
+                    <h2 class="section-title">Section 3: Statewide Testing</h2>
+
+                    <!-- Q: Online testing increased time -->
+                    <div class="question">
+                        <span class="question-label required">The Pennsylvania Department of Education's decision to mandate online PSSA/Keystone testing has increased the amount of time my students spend on digital devices during the school day.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="onlineTestingIncreasedTime" id="otit-1" value="Strongly disagree" required><label for="otit-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="onlineTestingIncreasedTime" id="otit-2" value="Somewhat disagree"><label for="otit-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="onlineTestingIncreasedTime" id="otit-3" value="Neither agree nor disagree"><label for="otit-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="onlineTestingIncreasedTime" id="otit-4" value="Somewhat agree"><label for="otit-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="onlineTestingIncreasedTime" id="otit-5" value="Strongly agree"><label for="otit-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: More tech than necessary -->
+                    <div class="question">
+                        <span class="question-label required">Because of the move to online PSSA testing, I use more technology in my classroom than I believe is educationally necessary.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="moreTechThanNecessary" id="mtn-1" value="Strongly disagree" required><label for="mtn-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="moreTechThanNecessary" id="mtn-2" value="Somewhat disagree"><label for="mtn-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="moreTechThanNecessary" id="mtn-3" value="Neither agree nor disagree"><label for="mtn-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="moreTechThanNecessary" id="mtn-4" value="Somewhat agree"><label for="mtn-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="moreTechThanNecessary" id="mtn-5" value="Strongly agree"><label for="mtn-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Pressure from admin -->
+                    <div class="question">
+                        <span class="question-label required">I feel pressure from building or district administration to increase students' use of technology in order to prepare them for online PSSA testing.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="pressureFromAdmin" id="pfa-1" value="Strongly disagree" required><label for="pfa-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="pressureFromAdmin" id="pfa-2" value="Somewhat disagree"><label for="pfa-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="pressureFromAdmin" id="pfa-3" value="Neither agree nor disagree"><label for="pfa-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="pressureFromAdmin" id="pfa-4" value="Somewhat agree"><label for="pfa-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="pressureFromAdmin" id="pfa-5" value="Strongly agree"><label for="pfa-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Negative impact teaching -->
+                    <div class="question">
+                        <span class="question-label required">Overall, the move to online PSSA testing has had a negative impact on my ability to teach the way I think is best for my students.</span>
+                        <div class="likert-scale">
+                            <div class="option-item"><input type="radio" name="negativeImpactTeaching" id="nit-1" value="Strongly disagree" required><label for="nit-1">Strongly disagree</label></div>
+                            <div class="option-item"><input type="radio" name="negativeImpactTeaching" id="nit-2" value="Somewhat disagree"><label for="nit-2">Somewhat disagree</label></div>
+                            <div class="option-item"><input type="radio" name="negativeImpactTeaching" id="nit-3" value="Neither agree nor disagree"><label for="nit-3">Neither agree nor disagree</label></div>
+                            <div class="option-item"><input type="radio" name="negativeImpactTeaching" id="nit-4" value="Somewhat agree"><label for="nit-4">Somewhat agree</label></div>
+                            <div class="option-item"><input type="radio" name="negativeImpactTeaching" id="nit-5" value="Strongly agree"><label for="nit-5">Strongly agree</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Additional teaching due to testing -->
+                    <div class="question">
+                        <span class="question-label required">Since the move to online PSSA testing, I spend additional instructional time explicitly teaching: (Select all that apply)</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="checkbox" name="additionalTeaching" id="addl-typing" value="Typing/keyboard skills mainly for test readiness"><label for="addl-typing">Typing/keyboard skills mainly for test readiness</label></div>
+                            <div class="option-item"><input type="checkbox" name="additionalTeaching" id="addl-troubleshoot" value="How to troubleshoot device or platform issues to navigate online testing platforms/tools"><label for="addl-troubleshoot">How to troubleshoot device or platform issues to navigate online testing platforms/tools</label></div>
+                            <div class="option-item"><input type="checkbox" name="additionalTeaching" id="addl-none" value="None of the above"><label for="addl-none">None of the above</label></div>
+                            <div class="option-item"><input type="checkbox" name="additionalTeaching" id="addl-other" value="Other"><label for="addl-other">Other (please specify)</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Additional teaching other (conditional) -->
+                    <div class="question conditional" id="additionalTeachingOtherQuestion">
+                        <span class="question-label">Please specify:</span>
+                        <input type="text" name="additionalTeachingOther" id="additionalTeachingOther" placeholder="Describe...">
+                    </div>
+                </div>
+
+                <!-- ============ SECTION 4: Personal Electronic Devices & Social Media ============ -->
+                <div class="section" data-section="4">
+                    <h2 class="section-title">Section 4: Personal Electronic Device &amp; Social Media Use</h2>
+
+                    <!-- Q: Policy type -->
+                    <div class="question">
+                        <span class="question-label required">What kind of personal electronic device (cell phones, smartwatches, airpods) policy does your school district have?</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="radio" name="devicePolicyType" id="dpt-board" value="Policy voted on and approved by the school board" required><label for="dpt-board">Policy voted on and approved by the school board</label></div>
+                            <div class="option-item"><input type="radio" name="devicePolicyType" id="dpt-handbook" value="Building specific rules in a handbook"><label for="dpt-handbook">Building specific rules in a handbook</label></div>
+                            <div class="option-item"><input type="radio" name="devicePolicyType" id="dpt-verbal" value="Verbally communicated, but no written policy"><label for="dpt-verbal">Verbally communicated, but no written policy</label></div>
+                            <div class="option-item"><input type="radio" name="devicePolicyType" id="dpt-other" value="Other"><label for="dpt-other">Other</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Policy type other (conditional) -->
+                    <div class="question conditional" id="devicePolicyOtherQuestion">
+                        <span class="question-label">Please specify:</span>
+                        <input type="text" name="devicePolicyOther" id="devicePolicyOther" placeholder="Describe your district's policy...">
+                    </div>
+
+                    <!-- Q: Building rule -->
+                    <div class="question">
+                        <span class="question-label required">What is your building rule regarding personal electronic devices?</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="radio" name="buildingRule" id="br-bellaway" value="Bell-to-bell restriction, devices stored off and away (lockers, Yondr, collected)" required><label for="br-bellaway">Bell-to-bell (first bell to last bell) restriction — devices are stored off and away (lockers, Yondr, collected at entry or homeroom)</label></div>
+                            <div class="option-item"><input type="radio" name="buildingRule" id="br-bellback" value="Bell-to-bell restriction, devices kept in backpacks/on the student"><label for="br-bellback">Bell-to-bell (first bell to last bell) restriction — devices are kept in backpacks/on the student</label></div>
+                            <div class="option-item"><input type="radio" name="buildingRule" id="br-instructional-enforced" value="Instructional time only, uniformly enforced with supportive administration"><label for="br-instructional-enforced">Instructional time only policy (students have access between classes, in hallways, in lunchroom) that IS uniformly enforced with supportive building-level administration</label></div>
+                            <div class="option-item"><input type="radio" name="buildingRule" id="br-instructional-not" value="Instructional time only, NOT uniformly enforced/supported by administration"><label for="br-instructional-not">Instructional time only policy that is NOT uniformly enforced/supported by building-level administration</label></div>
+                            <div class="option-item"><input type="radio" name="buildingRule" id="br-individual" value="Left up to individual teacher to decide and enforce"><label for="br-individual">Left up to individual teacher to decide and enforce</label></div>
+                            <div class="option-item"><input type="radio" name="buildingRule" id="br-none" value="No restrictions on student personal electronic devices"><label for="br-none">No restrictions on student personal electronic devices</label></div>
+                            <div class="option-item"><input type="radio" name="buildingRule" id="br-other" value="Other"><label for="br-other">Other</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Building rule other (conditional) -->
+                    <div class="question conditional" id="buildingRuleOtherQuestion">
+                        <span class="question-label">Please specify:</span>
+                        <input type="text" name="buildingRuleOther" id="buildingRuleOther" placeholder="Describe your building's rule...">
+                    </div>
+
+                    <!-- Q: Phone disruptions -->
+                    <div class="question">
+                        <span class="question-label required">How frequently do student cell phones cause disruptions in your classroom?</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="radio" name="phoneDisruptions" id="pd-daily" value="Daily" required><label for="pd-daily">Daily</label></div>
+                            <div class="option-item"><input type="radio" name="phoneDisruptions" id="pd-weekly" value="Weekly"><label for="pd-weekly">Weekly</label></div>
+                            <div class="option-item"><input type="radio" name="phoneDisruptions" id="pd-occasionally" value="Occasionally"><label for="pd-occasionally">Occasionally</label></div>
+                            <div class="option-item"><input type="radio" name="phoneDisruptions" id="pd-rarely" value="Rarely"><label for="pd-rarely">Rarely</label></div>
+                            <div class="option-item"><input type="radio" name="phoneDisruptions" id="pd-never" value="Never"><label for="pd-never">Never</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Q: Phone challenges -->
+                    <div class="question">
+                        <span class="question-label required">Which of the following challenges have you observed related to student cell phones? (Check all that apply)</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="checkbox" name="phoneChallenges" id="pc-distraction" value="Distraction from learning"><label for="pc-distraction">Distraction from learning</label></div>
+                            <div class="option-item"><input type="checkbox" name="phoneChallenges" id="pc-cyberbullying" value="Cyberbullying or online conflict"><label for="pc-cyberbullying">Cyberbullying or online conflict</label></div>
+                            <div class="option-item"><input type="checkbox" name="phoneChallenges" id="pc-enforcement" value="Difficulties enforcing the policy"><label for="pc-enforcement">Difficulties enforcing the policy</label></div>
+                            <div class="option-item"><input type="checkbox" name="phoneChallenges" id="pc-safety" value="Safety concerns"><label for="pc-safety">Safety concerns</label></div>
+                            <div class="option-item"><input type="checkbox" name="phoneChallenges" id="pc-peer" value="Social/peer pressure"><label for="pc-peer">Social/peer pressure</label></div>
+                            <div class="option-item"><input type="checkbox" name="phoneChallenges" id="pc-none" value="None"><label for="pc-none">None</label></div>
+                            <div class="option-item"><input type="checkbox" name="phoneChallenges" id="pc-other" value="Other"><label for="pc-other">Other</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Phone challenges other (conditional) -->
+                    <div class="question conditional" id="phoneChallengesOtherQuestion">
+                        <span class="question-label">Please specify:</span>
+                        <input type="text" name="phoneChallengesOther" id="phoneChallengesOther" placeholder="Describe...">
+                    </div>
+
+                    <!-- Q: Phone benefits -->
+                    <div class="question">
+                        <span class="question-label required">Which benefits do you believe come from students having cell phones at school? (Check all that apply)</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="checkbox" name="phoneBenefits" id="pb-comm" value="Communication with caregivers"><label for="pb-comm">Communication with caregivers</label></div>
+                            <div class="option-item"><input type="checkbox" name="phoneBenefits" id="pb-transport" value="Access to transportation or safety info"><label for="pb-transport">Access to transportation or safety info</label></div>
+                            <div class="option-item"><input type="checkbox" name="phoneBenefits" id="pb-edtools" value="Access to educational tools"><label for="pb-edtools">Access to educational tools</label></div>
+                            <div class="option-item"><input type="checkbox" name="phoneBenefits" id="pb-iep" value="IEP/504"><label for="pb-iep">IEP/504</label></div>
+                            <div class="option-item"><input type="checkbox" name="phoneBenefits" id="pb-medical" value="Medical needs (e.g., diabetes)"><label for="pb-medical">Medical needs (e.g., diabetes)</label></div>
+                            <div class="option-item"><input type="checkbox" name="phoneBenefits" id="pb-none" value="None"><label for="pb-none">None</label></div>
+                            <div class="option-item"><input type="checkbox" name="phoneBenefits" id="pb-other" value="Other"><label for="pb-other">Other</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Phone benefits other (conditional) -->
+                    <div class="question conditional" id="phoneBenefitsOtherQuestion">
+                        <span class="question-label">Please specify:</span>
+                        <input type="text" name="phoneBenefitsOther" id="phoneBenefitsOther" placeholder="Describe...">
+                    </div>
+                </div>
+
+                <!-- ============ SECTION 5: Conclusion ============ -->
+                <div class="section" data-section="5">
+                    <h2 class="section-title">Section 5: Conclusion</h2>
+
+                    <!-- Q: Support needs -->
+                    <div class="question">
+                        <span class="question-label required">What would best support teachers in healthy and effective classroom technology integration? (Check all that apply)</span>
+                        <div class="options-list">
+                            <div class="option-item"><input type="checkbox" name="supportNeeds" id="sn-expectations" value="Clearer school-wide expectations around student tech use"><label for="sn-expectations">Clearer school-wide expectations around student tech use</label></div>
+                            <div class="option-item"><input type="checkbox" name="supportNeeds" id="sn-print" value="More access to print-based or non-digital materials"><label for="sn-print">More access to print-based or non-digital materials</label></div>
+                            <div class="option-item"><input type="checkbox" name="supportNeeds" id="sn-toolkit" value="A school 'tech toolkit' with guidance on classroom management and digital citizenship"><label for="sn-toolkit">A school "tech toolkit" with guidance on classroom management and digital citizenship</label></div>
+                            <div class="option-item"><input type="checkbox" name="supportNeeds" id="sn-monitor" value="Easier ways to monitor and manage student Chromebook activity"><label for="sn-monitor">Easier ways to monitor and manage student Chromebook activity</label></div>
+                            <div class="option-item"><input type="checkbox" name="supportNeeds" id="sn-digliteracy" value="More robust digital literacy instruction for students"><label for="sn-digliteracy">More robust digital literacy instruction for students</label></div>
+                            <div class="option-item"><input type="checkbox" name="supportNeeds" id="sn-districttools" value="District-provided tools to support responsible technology use"><label for="sn-districttools">District-provided tools to support responsible technology use</label></div>
+                            <div class="option-item"><input type="checkbox" name="supportNeeds" id="sn-pd" value="More professional development"><label for="sn-pd">More professional development</label></div>
+                            <div class="option-item"><input type="checkbox" name="supportNeeds" id="sn-collaborate" value="Opportunities to collaborate with colleagues on tech practices"><label for="sn-collaborate">Opportunities to collaborate with colleagues on tech practices</label></div>
+                            <div class="option-item"><input type="checkbox" name="supportNeeds" id="sn-unsure" value="Unsure"><label for="sn-unsure">Unsure</label></div>
+                            <div class="option-item"><input type="checkbox" name="supportNeeds" id="sn-other" value="Other"><label for="sn-other">Other</label></div>
+                        </div>
+                    </div>
+
+                    <!-- Support needs other (conditional) -->
+                    <div class="question conditional" id="supportNeedsOtherQuestion">
+                        <span class="question-label">Please specify:</span>
+                        <input type="text" name="supportNeedsOther" id="supportNeedsOther" placeholder="Describe...">
+                    </div>
+
+                    <!-- Q: Positive uses -->
+                    <div class="question">
+                        <span class="question-label">In your experience, what are the most positive uses of technology in the classroom? <span class="optional-tag">(Optional)</span></span>
+                        <textarea name="positiveTechUses" id="positiveTechUses" placeholder="Share your thoughts..."></textarea>
+                    </div>
+
+                    <!-- Q: Tech concerns -->
+                    <div class="question">
+                        <span class="question-label">What concerns do you have about student technology use at school? <span class="optional-tag">(Optional)</span></span>
+                        <textarea name="techConcerns" id="techConcerns" placeholder="Share your thoughts..."></textarea>
+                    </div>
+
+                    <!-- Q: Desired changes -->
+                    <div class="question">
+                        <span class="question-label">What changes would you like to see regarding technology use at your school? <span class="optional-tag">(Optional)</span></span>
+                        <textarea name="desiredChanges" id="desiredChanges" placeholder="Share your thoughts..."></textarea>
+                    </div>
+
+                    <!-- Q: Anything else -->
+                    <div class="question">
+                        <span class="question-label">Is there anything else you would like to share about how technology has shifted your experience as an educator? <span class="optional-tag">(Optional)</span></span>
+                        <textarea name="anythingElse" id="anythingElse" placeholder="Share your thoughts..."></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Submit Survey</button>
+            </form>
+
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage">
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                </div>
+                <h2>Thank You!</h2>
+                <div style="max-width: 520px; margin: 0 auto; text-align: left;">
+                    <p style="margin-top: 16px; text-align: center; color: #000;">Your response has been recorded.</p>
+                    <p style="margin-top: 16px; color: #555; font-size: 0.95rem;">Want to stay connected? <a href="http://eepurl.com/jop_zc" target="_blank" style="color: #557a3e;">Join our mailing list</a> for updates.</p>
+                    <p style="margin-top: 16px; margin-bottom: 0; color: #555; font-size: 0.95rem;"><a href="https://paunplugged.org" target="_blank" style="color: #557a3e;">PA Unplugged</a> is a grassroots coalition working to shift the culture around technology use in homes, schools, and communities. PA Unplugged is a registered 501(c)(3).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PA School Districts Data
+        const paDistricts = {
+            "Adams": ["Bermudian Springs", "Conewago Valley", "Fairfield Area", "Gettysburg Area", "Littlestown Area", "Upper Adams", "Other - please specify"],
+            "Allegheny": ["Allegheny Valley", "Avonworth", "Baldwin-Whitehall", "Bethel Park", "Brentwood Borough", "Carlynton", "Chartiers Valley", "Clairton City", "Cornell", "Deer Lakes", "Duquesne City", "East Allegheny", "Elizabeth Forward", "Fox Chapel Area", "Gateway", "Hampton Township", "Highlands", "Keystone Oaks", "McKeesport Area", "Montour", "Moon Area", "Mt. Lebanon", "North Allegheny", "North Hills", "Northgate", "Penn Hills", "Pine-Richland", "Pittsburgh", "Plum Borough", "Quaker Valley", "Riverview", "Shaler Area", "South Allegheny", "South Fayette Township", "South Park", "Steel Valley", "Sto-Rox", "Upper St. Clair", "West Allegheny", "West Jefferson Hills", "West Mifflin Area", "Wilkinsburg Borough", "Woodland Hills", "Other - please specify"],
+            "Armstrong": ["Apollo-Ridge", "Armstrong", "Freeport Area", "Leechburg Area", "Other - please specify"],
+            "Beaver": ["Aliquippa", "Ambridge Area", "Beaver Area", "Big Beaver Falls Area", "Blackhawk", "Center Area", "Freedom Area", "Hopewell Area", "Midland Borough", "New Brighton Area", "Riverside Beaver County", "Rochester Area", "South Side Area", "Western Beaver County", "Other - please specify"],
+            "Bedford": ["Bedford Area", "Chestnut Ridge", "Everett Area", "Northern Bedford County", "Tussey Mountain", "Other - please specify"],
+            "Berks": ["Antietam", "Boyertown Area", "Brandywine Heights Area", "Conrad Weiser Area", "Daniel Boone Area", "Exeter Township", "Fleetwood Area", "Governor Mifflin", "Hamburg Area", "Kutztown Area", "Muhlenberg", "Oley Valley", "Reading", "Schuylkill Valley", "Tulpehocken Area", "Twin Valley", "Wilson", "Wyomissing Area", "Other - please specify"],
+            "Blair": ["Altoona Area", "Bellwood-Antis", "Claysburg-Kimmel", "Hollidaysburg Area", "Spring Cove", "Tyrone Area", "Williamsburg Community", "Other - please specify"],
+            "Bradford": ["Athens Area", "Canton Area", "Northeast Bradford", "Sayre Area", "Towanda Area", "Troy Area", "Wyalusing Area", "Other - please specify"],
+            "Bucks": ["Bensalem Township", "Bristol Borough", "Bristol Township", "Centennial", "Central Bucks", "Council Rock", "Morrisville Borough", "Neshaminy", "New Hope-Solebury", "Palisades", "Pennridge", "Pennsbury", "Quakertown Community", "Other - please specify"],
+            "Butler": ["Butler Area", "Karns City Area", "Mars Area", "Moniteau", "Seneca Valley", "Slippery Rock Area", "South Butler County", "Other - please specify"],
+            "Cambria": ["Cambria Heights", "Central Cambria", "Conemaugh Township Area", "Ferndale Area", "Forest Hills", "Greater Johnstown", "Northern Cambria", "Penn Cambria", "Portage Area", "Richland", "Westmont Hilltop", "Other - please specify"],
+            "Cameron": ["Cameron County", "Other - please specify"],
+            "Carbon": ["Jim Thorpe Area", "Lehighton Area", "Palmerton Area", "Panther Valley", "Weatherly Area", "Other - please specify"],
+            "Centre": ["Bald Eagle Area", "Bellefonte Area", "Penns Valley Area", "State College Area", "Other - please specify"],
+            "Chester": ["Avon Grove", "Coatesville Area", "Downingtown Area", "Great Valley", "Kennett Consolidated", "Octorara Area", "Owen J. Roberts", "Oxford Area", "Phoenixville Area", "Tredyffrin-Easttown", "Unionville-Chadds Ford", "West Chester Area", "Other - please specify"],
+            "Clarion": ["Clarion Area", "Clarion-Limestone Area", "Keystone", "North Clarion County", "Redbank Valley", "Union", "Other - please specify"],
+            "Clearfield": ["Clearfield Area", "Curwensville Area", "DuBois Area", "Glendale", "Harmony Area", "Moshannon Valley", "Philipsburg-Osceola Area", "West Branch Area", "Other - please specify"],
+            "Clinton": ["Keystone Central", "Other - please specify"],
+            "Columbia": ["Benton Area", "Berwick Area", "Bloomsburg Area", "Central Columbia", "Millville Area", "Southern Columbia Area", "Other - please specify"],
+            "Crawford": ["Cambridge Springs", "Conneaut", "Crawford Central", "Penncrest", "Union City Area", "Other - please specify"],
+            "Cumberland": ["Big Spring", "Camp Hill", "Carlisle Area", "Cumberland Valley", "East Pennsboro Area", "Mechanicsburg Area", "Shippensburg Area", "South Middleton", "West Shore", "Other - please specify"],
+            "Dauphin": ["Central Dauphin", "Derry Township", "Halifax Area", "Harrisburg City", "Lower Dauphin", "Middletown Area", "Millersburg Area", "Steelton-Highspire", "Susquehanna Township", "Upper Dauphin Area", "Williams Valley", "Other - please specify"],
+            "Delaware": ["Chester-Upland", "Chichester", "Garnet Valley", "Haverford Township", "Interboro", "Marple Newtown", "Penn-Delco", "Radnor Township", "Ridley", "Rose Tree Media", "Southeast Delco", "Springfield", "Upper Darby", "Wallingford-Swarthmore", "William Penn", "Other - please specify"],
+            "Elk": ["Johnsonburg Area", "Ridgway Area", "St. Marys Area", "Other - please specify"],
+            "Erie": ["Corry Area", "Erie City", "Fairview", "Fort LeBoeuf", "General McLane", "Girard", "Harbor Creek", "Iroquois", "Millcreek Township", "North East", "Northwestern", "Union City Area", "Wattsburg Area", "Other - please specify"],
+            "Fayette": ["Albert Gallatin Area", "Brownsville Area", "Connellsville Area", "Frazier", "Laurel Highlands", "Uniontown Area", "Other - please specify"],
+            "Forest": ["Forest Area", "Other - please specify"],
+            "Franklin": ["Chambersburg Area", "Fannett-Metal", "Greencastle-Antrim", "Tuscarora", "Waynesboro Area", "Other - please specify"],
+            "Fulton": ["Central Fulton", "Forbes Road", "Southern Fulton", "Other - please specify"],
+            "Greene": ["Carmichaels Area", "Central Greene", "Jefferson-Morgan", "Southeastern Greene", "West Greene", "Other - please specify"],
+            "Huntingdon": ["Huntingdon Area", "Juniata Valley", "Mount Union Area", "Southern Huntingdon County", "Other - please specify"],
+            "Indiana": ["Blairsville-Saltsburg", "Homer-Center", "Indiana Area", "Marion Center Area", "Penns Manor Area", "Purchase Line", "United", "Other - please specify"],
+            "Jefferson": ["Brockway Area", "Brookville Area", "Punxsutawney Area", "Other - please specify"],
+            "Juniata": ["Juniata County", "Other - please specify"],
+            "Lackawanna": ["Abington Heights", "Carbondale Area", "Dunmore", "Lakeland", "Mid Valley", "North Pocono", "Old Forge", "Riverside", "Scranton", "Valley View", "Other - please specify"],
+            "Lancaster": ["Cocalico", "Columbia Borough", "Conestoga Valley", "Donegal", "Eastern Lancaster County", "Elizabethtown Area", "Ephrata Area", "Hempfield", "Lampeter-Strasburg", "Lancaster", "Manheim Central", "Manheim Township", "Penn Manor", "Pequea Valley", "Solanco", "Warwick", "Other - please specify"],
+            "Lawrence": ["Ellwood City Area", "Laurel", "Mohawk Area", "Neshannock Township", "New Castle Area", "Shenango Area", "Union Area", "Wilmington Area", "Other - please specify"],
+            "Lebanon": ["Annville-Cleona", "Cornwall-Lebanon", "Eastern Lebanon County", "Lebanon", "Northern Lebanon", "Palmyra Area", "Other - please specify"],
+            "Lehigh": ["Allentown City", "Catasauqua Area", "East Penn", "Northern Lehigh", "Northwestern Lehigh", "Parkland", "Salisbury Township", "Southern Lehigh", "Whitehall-Coplay", "Other - please specify"],
+            "Luzerne": ["Crestwood", "Dallas", "Greater Nanticoke Area", "Hanover Area", "Hazleton Area", "Lake-Lehman", "Northwest Area", "Pittston Area", "Wilkes-Barre Area", "Wyoming Area", "Wyoming Valley West", "Other - please specify"],
+            "Lycoming": ["East Lycoming", "Jersey Shore Area", "Loyalsock Township", "Montgomery Area", "Montoursville Area", "Muncy", "South Williamsport Area", "Williamsport Area", "Other - please specify"],
+            "McKean": ["Bradford Area", "Kane Area", "Otto-Eldred", "Port Allegany", "Smethport Area", "Other - please specify"],
+            "Mercer": ["Commodore Perry", "Farrell Area", "Grove City Area", "Greenville Area", "Hermitage", "Jamestown Area", "Lakeview", "Mercer Area", "Reynolds", "Sharon City", "Sharpsville Area", "West Middlesex Area", "Other - please specify"],
+            "Mifflin": ["Mifflin County", "Other - please specify"],
+            "Monroe": ["East Stroudsburg Area", "Pleasant Valley", "Pocono Mountain", "Stroudsburg Area", "Other - please specify"],
+            "Montgomery": ["Abington", "Bryn Athyn", "Cheltenham Township", "Colonial", "Hatboro-Horsham", "Jenkintown", "Lower Merion", "Lower Moreland Township", "Methacton", "Norristown Area", "North Penn", "Perkiomen Valley", "Plymouth-Whitemarsh", "Pottsgrove", "Souderton Area", "Springfield Township", "Spring-Ford Area", "Upper Dublin", "Upper Merion Area", "Upper Moreland Township", "Upper Perkiomen", "Wissahickon", "Other - please specify"],
+            "Montour": ["Danville Area", "Other - please specify"],
+            "Northampton": ["Bangor Area", "Bethlehem Area", "Easton Area", "Nazareth Area", "Northampton Area", "Pen Argyl Area", "Saucon Valley", "Wilson Area", "Other - please specify"],
+            "Northumberland": ["Line Mountain", "Milton Area", "Mount Carmel Area", "Shamokin Area", "Shikellamy", "Warrior Run", "Other - please specify"],
+            "Perry": ["Greenwood", "Newport", "Susquenita", "West Perry", "Other - please specify"],
+            "Philadelphia": ["School District of Philadelphia", "Other - please specify"],
+            "Pike": ["Delaware Valley", "Wallenpaupack Area", "Other - please specify"],
+            "Potter": ["Austin Area", "Coudersport Area", "Galeton Area", "Northern Potter", "Oswayo Valley", "Other - please specify"],
+            "Schuylkill": ["Blue Mountain", "Mahanoy Area", "Minersville Area", "North Schuylkill", "Pine Grove Area", "Pottsville Area", "Saint Clair Area", "Schuylkill Haven Area", "Shenandoah Valley", "Tamaqua Area", "Tri-Valley", "Williams Valley", "Other - please specify"],
+            "Snyder": ["Midd-West", "Selinsgrove Area", "Other - please specify"],
+            "Somerset": ["Berlin Brothersvalley", "Conemaugh Township Area", "Meyersdale Area", "North Star", "Rockwood Area", "Shade-Central City", "Shanksville-Stonycreek", "Somerset Area", "Turkeyfoot Valley Area", "Windber Area", "Other - please specify"],
+            "Sullivan": ["Sullivan County", "Other - please specify"],
+            "Susquehanna": ["Blue Ridge", "Elk Lake", "Forest City Regional", "Montrose Area", "Mountain View", "Susquehanna Community", "Other - please specify"],
+            "Tioga": ["Cowanesque Valley", "Northern Tioga", "Southern Tioga", "Wellsboro Area", "Other - please specify"],
+            "Union": ["Lewisburg Area", "Mifflinburg Area", "Other - please specify"],
+            "Venango": ["Cranberry Area", "Franklin Area", "Oil City Area", "Titusville Area", "Valley Grove", "Other - please specify"],
+            "Warren": ["Warren County", "Other - please specify"],
+            "Washington": ["Avella Area", "Bentworth", "Bethlehem-Center", "Burgettstown Area", "California Area", "Canon-McMillan", "Charleroi", "Chartiers-Houston", "Fort Cherry", "McGuffey", "Peters Township", "Ringgold", "Trinity Area", "Washington", "Other - please specify"],
+            "Wayne": ["Wayne Highlands", "Western Wayne", "Wallenpaupack Area", "Other - please specify"],
+            "Westmoreland": ["Belle Vernon Area", "Burrell", "Derry Area", "Franklin Regional", "Greater Latrobe", "Greensburg Salem", "Hempfield Area", "Jeannette City", "Kiski Area", "Ligonier Valley", "Monessen City", "Mount Pleasant Area", "New Kensington-Arnold", "Norwin", "Penn-Trafford", "Southmoreland", "Yough", "Other - please specify"],
+            "Wyoming": ["Lackawanna Trail", "Tunkhannock Area", "Other - please specify"],
+            "York": ["Central York", "Dallastown Area", "Dover Area", "Eastern York", "Hanover Public", "Northeastern York", "Northern York County", "Red Lion Area", "South Eastern", "South Western", "Southern York County", "Spring Grove Area", "West Shore", "West York Area", "York City", "York Suburban", "Other - please specify"]
+        };
+
+        const counties = Object.keys(paDistricts).sort();
+
+        // DOM Elements
+        const form = document.getElementById('surveyForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const progressBar = document.getElementById('progressBar');
+        const progressLabel = document.getElementById('progressLabel');
+
+        // Progress tracking
+        function updateProgress() {
+            const sections = document.querySelectorAll('.section[data-section]');
+            const totalSections = sections.length;
+            let currentSection = 1;
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.5) {
+                    currentSection = parseInt(section.dataset.section);
+                }
+            });
+            progressBar.style.width = (currentSection / totalSections) * 100 + '%';
+            progressLabel.textContent = `Section ${currentSection} of ${totalSections}`;
+        }
+        window.addEventListener('scroll', updateProgress);
+
+        // --- County/District Dropdowns ---
+        const countySearch = document.getElementById('countySearch');
+        const countyDropdown = document.getElementById('countyDropdown');
+        const countyValue = document.getElementById('countyValue');
+        const districtSearch = document.getElementById('districtSearch');
+        const districtDropdown = document.getElementById('districtDropdown');
+        const districtValue = document.getElementById('districtValue');
+
+        function initCountyDropdown() {
+            countyDropdown.innerHTML = '';
+            counties.forEach(county => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.textContent = county;
+                item.addEventListener('click', () => selectCounty(county));
+                countyDropdown.appendChild(item);
+            });
+        }
+
+        function selectCounty(county) {
+            countySearch.value = county;
+            countyValue.value = county;
+            countyDropdown.classList.remove('open');
+            document.getElementById('countyError').classList.remove('visible');
+            const schoolType = document.querySelector('input[name="schoolType"]:checked');
+            if (schoolType && schoolType.value === 'Public school') {
+                updateDistrictDropdown(county);
+                document.getElementById('districtQuestion').classList.add('visible');
+                districtSearch.value = '';
+                districtValue.value = '';
+            }
+        }
+
+        function updateDistrictDropdown(county) {
+            districtDropdown.innerHTML = '';
+            (paDistricts[county] || []).forEach(district => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.textContent = district;
+                item.addEventListener('click', () => selectDistrict(district));
+                districtDropdown.appendChild(item);
+            });
+        }
+
+        function selectDistrict(district) {
+            districtSearch.value = district;
+            districtValue.value = district;
+            districtDropdown.classList.remove('open');
+            document.getElementById('districtError').classList.remove('visible');
+            const otherQ = document.getElementById('districtOtherQuestion');
+            if (district === 'Other - please specify') {
+                otherQ.classList.add('visible');
+            } else {
+                otherQ.classList.remove('visible');
+            }
+        }
+
+        function filterDropdown(dropdown, items, searchTerm, selectFn) {
+            const filtered = items.filter(i => i.toLowerCase().includes(searchTerm.toLowerCase()));
+            dropdown.innerHTML = '';
+            filtered.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.textContent = item;
+                div.addEventListener('click', () => selectFn(item));
+                dropdown.appendChild(div);
+            });
+            dropdown.classList.add('open');
+        }
+
+        countySearch.addEventListener('focus', () => { countyDropdown.classList.add('open'); filterDropdown(countyDropdown, counties, countySearch.value, selectCounty); });
+        countySearch.addEventListener('input', () => filterDropdown(countyDropdown, counties, countySearch.value, selectCounty));
+        districtSearch.addEventListener('focus', () => { districtDropdown.classList.add('open'); if (countyValue.value) filterDropdown(districtDropdown, paDistricts[countyValue.value], districtSearch.value, selectDistrict); });
+        districtSearch.addEventListener('input', () => { if (countyValue.value) filterDropdown(districtDropdown, paDistricts[countyValue.value], districtSearch.value, selectDistrict); });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#countyContainer')) countyDropdown.classList.remove('open');
+            if (!e.target.closest('#districtContainer')) districtDropdown.classList.remove('open');
+        });
+
+        // --- Conditional Logic ---
+
+        // School type → county, district/school name
+        document.querySelectorAll('input[name="schoolType"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                document.getElementById('countyQuestion').classList.add('visible');
+                if (e.target.value === 'Public school') {
+                    document.getElementById('schoolNameQuestion').classList.remove('visible');
+                    if (countyValue.value) document.getElementById('districtQuestion').classList.add('visible');
+                } else {
+                    document.getElementById('districtQuestion').classList.remove('visible');
+                    document.getElementById('districtOtherQuestion').classList.remove('visible');
+                    document.getElementById('schoolNameQuestion').classList.add('visible');
+                    districtSearch.value = '';
+                    districtValue.value = '';
+                }
+            });
+        });
+
+        // 1:1 devices → device type
+        document.querySelectorAll('input[name="hasOneToOne"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const dtq = document.getElementById('deviceTypeQuestion');
+                if (e.target.value === 'Yes') {
+                    dtq.classList.add('visible');
+                } else {
+                    dtq.classList.remove('visible');
+                    document.getElementById('deviceTypeOtherQuestion').classList.remove('visible');
+                }
+            });
+        });
+
+        // Device type → other
+        document.querySelectorAll('input[name="deviceType"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const otherQ = document.getElementById('deviceTypeOtherQuestion');
+                if (e.target.value === 'Other') { otherQ.classList.add('visible'); } else { otherQ.classList.remove('visible'); }
+            });
+        });
+
+        // Subjects other
+        document.getElementById('subj-other').addEventListener('change', (e) => {
+            toggle('subjectsOtherQuestion', e.target.checked);
+        });
+
+        // Mandate → details
+        document.querySelectorAll('input[name="mandateUsage"]').forEach(radio => {
+            radio.addEventListener('change', (e) => { toggle('mandateDetailsQuestion', e.target.value === 'Yes'); });
+        });
+
+        // Class time → clarify
+        document.querySelectorAll('input[name="classTimeDevices"]').forEach(radio => {
+            radio.addEventListener('change', (e) => { toggle('classTimeClarifyQuestion', e.target.value === 'Depends on grade level'); });
+        });
+
+        // Digital literacy other
+        document.getElementById('dl-other').addEventListener('change', (e) => { toggle('digitalLiteracyOtherQuestion', e.target.checked); });
+
+        // Additional teaching other
+        document.getElementById('addl-other').addEventListener('change', (e) => { toggle('additionalTeachingOtherQuestion', e.target.checked); });
+
+        // Device policy other
+        document.querySelectorAll('input[name="devicePolicyType"]').forEach(radio => {
+            radio.addEventListener('change', (e) => { toggle('devicePolicyOtherQuestion', e.target.value === 'Other'); });
+        });
+
+        // Building rule other
+        document.querySelectorAll('input[name="buildingRule"]').forEach(radio => {
+            radio.addEventListener('change', (e) => { toggle('buildingRuleOtherQuestion', e.target.value === 'Other'); });
+        });
+
+        // Phone challenges other
+        document.getElementById('pc-other').addEventListener('change', (e) => { toggle('phoneChallengesOtherQuestion', e.target.checked); });
+
+        // Phone benefits other
+        document.getElementById('pb-other').addEventListener('change', (e) => { toggle('phoneBenefitsOtherQuestion', e.target.checked); });
+
+        // Support needs other
+        document.getElementById('sn-other').addEventListener('change', (e) => { toggle('supportNeedsOtherQuestion', e.target.checked); });
+
+        function toggle(id, show) {
+            const el = document.getElementById(id);
+            if (show) { el.classList.add('visible'); } else { el.classList.remove('visible'); }
+        }
+
+        // --- Form Submission ---
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwXtZcOZvg8RsJ6ksyM-R0RchJ2BdqVyRciDAmJ2nmeA_7KXwiPDQXRYP2PPjQYbYfW/exec';
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (localStorage.getItem('educator-survey-submitted')) {
+                if (!confirm('It looks like you already submitted a response. Would you like to submit another one? (e.g., for a different school or district)')) return;
+            }
+
+            // Validate required fields
+            const schoolType = document.querySelector('input[name="schoolType"]:checked');
+            if (!schoolType) { alert('Please select your school type.'); return; }
+
+            if (!countyValue.value) {
+                document.getElementById('countyError').classList.add('visible');
+                document.getElementById('countyQuestion').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            if (schoolType.value === 'Public school' && !districtValue.value) {
+                document.getElementById('districtError').classList.add('visible');
+                document.getElementById('districtQuestion').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            const grades = document.querySelectorAll('input[name="gradeLevels"]:checked');
+            if (grades.length === 0) { alert('Please select at least one grade level.'); return; }
+
+            const subjects = document.querySelectorAll('input[name="subjects"]:checked');
+            if (subjects.length === 0) { alert('Please select at least one subject.'); return; }
+
+            // Collect data
+            const data = {};
+            const formData = new FormData(form);
+
+            // Simple radio/text fields
+            for (let [key, value] of formData.entries()) {
+                if (!['gradeLevels','subjects','digitalLiteracy','additionalTeaching','phoneChallenges','phoneBenefits','supportNeeds'].includes(key)) {
+                    data[key] = value;
+                }
+            }
+
+            // Multi-select fields
+            data.gradeLevels = Array.from(document.querySelectorAll('input[name="gradeLevels"]:checked')).map(cb => cb.value).join(', ');
+            data.subjects = Array.from(document.querySelectorAll('input[name="subjects"]:checked')).map(cb => cb.value).join(', ');
+            data.digitalLiteracy = Array.from(document.querySelectorAll('input[name="digitalLiteracy"]:checked')).map(cb => cb.value).join(', ');
+            data.additionalTeaching = Array.from(document.querySelectorAll('input[name="additionalTeaching"]:checked')).map(cb => cb.value).join(', ');
+            data.phoneChallenges = Array.from(document.querySelectorAll('input[name="phoneChallenges"]:checked')).map(cb => cb.value).join(', ');
+            data.phoneBenefits = Array.from(document.querySelectorAll('input[name="phoneBenefits"]:checked')).map(cb => cb.value).join(', ');
+            data.supportNeeds = Array.from(document.querySelectorAll('input[name="supportNeeds"]:checked')).map(cb => cb.value).join(', ');
+
+            data.timestamp = new Date().toISOString();
+
+            console.log('Survey Data:', data);
+
+            if (GOOGLE_SCRIPT_URL === 'PASTE_YOUR_WEB_APP_URL_HERE') {
+                console.log('Demo mode: Data not saved. Set GOOGLE_SCRIPT_URL to enable saving.');
+                form.style.display = 'none';
+                document.querySelector('.intro-section').style.display = 'none';
+                successMessage.classList.add('visible');
+            } else {
+                try {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Submitting...';
+                    await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    localStorage.setItem('educator-survey-submitted', 'true');
+                    form.style.display = 'none';
+                    document.querySelector('.intro-section').style.display = 'none';
+                    successMessage.classList.add('visible');
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('There was an error submitting your response. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Survey';
+                }
+            }
+        });
+
+        // Initialize
+        initCountyDropdown();
+        updateProgress();
+    </script>
+</body>
+</html>
