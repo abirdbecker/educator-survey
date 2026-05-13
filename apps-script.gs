@@ -55,6 +55,7 @@ const HEADERS = [
   'negativeImpactTeaching',
   'additionalTeaching',
   'additionalTeachingOther',
+  'pssaIssues',
   'devicePolicyType',
   'devicePolicyOther',
   'buildingRule',
@@ -66,10 +67,12 @@ const HEADERS = [
   'phoneBenefitsOther',
   'supportNeeds',
   'supportNeedsOther',
+  'policyRequests',
   'positiveTechUses',
   'techConcerns',
   'desiredChanges',
-  'anythingElse'
+  'anythingElse',
+  'contactEmail'
 ];
 
 function doPost(e) {

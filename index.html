@@ -150,9 +150,9 @@
         <div class="survey-body">
             <div class="intro-section" style="margin-bottom: 30px; padding: 20px; background: #f0ebe3; border-radius: 8px; border-left: 4px solid #557a3e;">
                 <p style="margin-bottom: 12px;"><strong>Welcome!</strong></p>
-                <p style="margin-bottom: 12px;"><a href="https://paunplugged.org" style="color: #557a3e;">PA Unplugged</a> is conducting an Educator Screens in Schools Survey open to all Pennsylvania K–12 educators in public, private, and charter schools. The goal of this survey is to give parents/caregivers, educators, and policymakers a clearer picture of how teachers are thinking about these important issues.</p>
-                <p style="margin-bottom: 12px;">We are gathering feedback about your experiences using technology in your classroom and across the school. Some aspects of technology use are determined at the school level, while others are shaped by district-wide policies. Your input will help inform school-based decision-making as well as broader statewide advocacy efforts.</p>
-                <p style="margin-bottom: 12px;">Your responses will help us build an anonymized public dashboard where you can explore and compare feedback across school districts throughout the state. To protect your privacy, demographic data visible on the dashboard will be shared only in aggregate, broken down by school district and grade level categories (K–2, 3–5, 6–8, and 9–12).</p>
+                <p style="margin-bottom: 12px;"><a href="https://paunplugged.org" style="color: #557a3e;">PA Unplugged</a> is conducting an Educator Screens in Schools Survey open to all Pennsylvania K–12 educators in public, private, and charter schools. The goal of this survey is to gain a clearer picture of how teachers are thinking about these important issues.</p>
+                <p style="margin-bottom: 12px;">We are gathering feedback about your experiences using technology in your classroom and across the school. Your input will help inform local and statewide advocacy efforts.</p>
+                <p style="margin-bottom: 12px;">Your responses will help us build an anonymized public dashboard where you can explore and compare feedback across school districts throughout the state. To protect your privacy, demographic data visible on the dashboard will be shared only in aggregate, broken down by school district and grade level categories (K–2, 3–5, 6–8, and 9–12). The dashboard will be made public when survey responses reach 500. Please share with your colleagues.</p>
                 <p style="margin-bottom: 12px;">You can review the parent/caregiver companion survey results at <a href="https://dashboard.paunplugged.org" style="color: #557a3e;">dashboard.paunplugged.org</a>.</p>
                 <p style="margin-bottom: 0;">Please complete this survey by <strong>July 15, 2026</strong>. If you have questions, reach out at <a href="mailto:hello@paunplugged.org" style="color: #557a3e;">hello@paunplugged.org</a>.</p>
             </div>
@@ -443,7 +443,7 @@
 
                     <!-- Q: Class time on devices -->
                     <div class="question">
-                        <span class="question-label required">How much class time do you believe students should spend using devices on a typical day?</span>
+                        <span class="question-label required">For the grade level you teach, how much class time do you believe students should spend using devices on a typical day?</span>
                         <div class="options-list">
                             <div class="option-item"><input type="radio" name="classTimeDevices" id="ctd-1" value="Less than 30 minutes" required><label for="ctd-1">Less than 30 minutes</label></div>
                             <div class="option-item"><input type="radio" name="classTimeDevices" id="ctd-2" value="30 minutes - 1 hour"><label for="ctd-2">30 minutes – 1 hour</label></div>
@@ -587,6 +587,12 @@
                         <span class="question-label">Please specify:</span>
                         <input type="text" name="additionalTeachingOther" id="additionalTeachingOther" placeholder="Describe...">
                     </div>
+
+                    <!-- Q: PSSA implementation issues -->
+                    <div class="question">
+                        <span class="question-label">Did you experience any challenges while administering PSSAs online this year? If so, please describe. <span class="optional-tag">(Optional)</span></span>
+                        <textarea name="pssaIssues" id="pssaIssues" placeholder="Share your experience..."></textarea>
+                    </div>
                 </div>
 
                 <!-- ============ SECTION 4: Personal Electronic Devices & Social Media ============ -->
@@ -634,7 +640,8 @@
                     <div class="question">
                         <span class="question-label required">How frequently do student cell phones cause disruptions in your classroom?</span>
                         <div class="options-list">
-                            <div class="option-item"><input type="radio" name="phoneDisruptions" id="pd-daily" value="Daily" required><label for="pd-daily">Daily</label></div>
+                            <div class="option-item"><input type="radio" name="phoneDisruptions" id="pd-multiple" value="Multiple times per day" required><label for="pd-multiple">Multiple times per day</label></div>
+                            <div class="option-item"><input type="radio" name="phoneDisruptions" id="pd-daily" value="Daily"><label for="pd-daily">Daily</label></div>
                             <div class="option-item"><input type="radio" name="phoneDisruptions" id="pd-weekly" value="Weekly"><label for="pd-weekly">Weekly</label></div>
                             <div class="option-item"><input type="radio" name="phoneDisruptions" id="pd-occasionally" value="Occasionally"><label for="pd-occasionally">Occasionally</label></div>
                             <div class="option-item"><input type="radio" name="phoneDisruptions" id="pd-rarely" value="Rarely"><label for="pd-rarely">Rarely</label></div>
@@ -710,6 +717,34 @@
                         <input type="text" name="supportNeedsOther" id="supportNeedsOther" placeholder="Describe...">
                     </div>
 
+                    <!-- Q: Policy requests -->
+                    <div class="question">
+                        <span class="question-label required">Which of the following would you support? (Check all that apply)</span>
+
+                        <p style="font-weight: 600; color: #557a3e; margin: 16px 0 8px; font-size: 0.9rem;">1:1 Devices</p>
+                        <div class="options-list" style="margin-bottom: 16px;">
+                            <div class="option-item"><input type="checkbox" name="policyRequests" id="pr-elem-shared" value="Eliminate device use for youngest learners (K-2); return to pencil and paper"><label for="pr-elem-shared">Eliminate device use for youngest learners (K–2); return to pencil and paper</label></div>
+                            <div class="option-item"><input type="checkbox" name="policyRequests" id="pr-elem-remove" value="Eliminate 1:1 device assignment for children in K-8; return to shared cart or computer lab model"><label for="pr-elem-remove">Eliminate 1:1 device assignment for children in K–8; return to shared cart or computer lab model</label></div>
+                            <div class="option-item"><input type="checkbox" name="policyRequests" id="pr-secondary-middle" value="Eliminate 1:1 device assignment for all students K-12; return to a shared cart or computer lab model"><label for="pr-secondary-middle">Eliminate 1:1 device assignment for all students K–12; return to a shared cart or computer lab model</label></div>
+                        </div>
+
+                        <p style="font-weight: 600; color: #557a3e; margin: 16px 0 8px; font-size: 0.9rem;">Device &amp; Homework Policies</p>
+                        <div class="options-list" style="margin-bottom: 16px;">
+                            <div class="option-item"><input type="checkbox" name="policyRequests" id="pr-devices-at-school" value="Keep school-issued devices at school through elementary and middle school; allow families to opt in to keep a device at home for assignments in middle school"><label for="pr-devices-at-school">Keep school-issued devices at school through elementary and middle school; allow families to <b><u>opt in</u></b> to keep a device at home for assignments in middle school</label></div>
+                            <div class="option-item"><input type="checkbox" name="policyRequests" id="pr-paper-homework" value="No screen-based homework in elementary school"><label for="pr-paper-homework">No screen-based homework in elementary school</label></div>
+                            <div class="option-item"><input type="checkbox" name="policyRequests" id="pr-no-recreational" value="Ban recreational device use during the school day and school events"><label for="pr-no-recreational">Ban recreational device use during the school day and school events</label></div>
+                            <div class="option-item"><input type="checkbox" name="policyRequests" id="pr-phone-free" value="Bell-to-bell phone-free policy in all schools, K-12"><label for="pr-phone-free">Bell-to-bell phone-free policy in all schools, K–12</label></div>
+                        </div>
+
+                        <p style="font-weight: 600; color: #557a3e; margin: 16px 0 8px; font-size: 0.9rem;">Curriculum &amp; Assessment</p>
+                        <div class="options-list">
+                            <div class="option-item"><input type="checkbox" name="policyRequests" id="pr-pssa-paper" value="Return PSSAs and state assessments to pencil and paper"><label for="pr-pssa-paper">Return PSSAs and state assessments to pencil and paper</label></div>
+                            <div class="option-item"><input type="checkbox" name="policyRequests" id="pr-block-apps" value="Block addictive apps, games, and social media on district devices"><label for="pr-block-apps">Block addictive apps, games, and social media on district devices</label></div>
+                            <div class="option-item"><input type="checkbox" name="policyRequests" id="pr-no-ai-k8" value="No student use of generative AI in K-8 on school devices"><label for="pr-no-ai-k8">No student use of generative AI in K–8 on school devices</label></div>
+                            <div class="option-item"><input type="checkbox" name="policyRequests" id="pr-teacher-training" value="Invest in teacher training for non-digital instruction"><label for="pr-teacher-training">Invest in teacher training for non-digital instruction</label></div>
+                        </div>
+                    </div>
+
                     <!-- Q: Positive uses -->
                     <div class="question">
                         <span class="question-label">In your experience, what are the most positive uses of technology in the classroom? <span class="optional-tag">(Optional)</span></span>
@@ -730,8 +765,15 @@
 
                     <!-- Q: Anything else -->
                     <div class="question">
-                        <span class="question-label">Is there anything else you would like to share about how technology has shifted your experience as an educator? <span class="optional-tag">(Optional)</span></span>
+                        <span class="question-label">Is there anything else you would like to share about how technology has impacted your experience as an educator? <span class="optional-tag">(Optional)</span></span>
                         <textarea name="anythingElse" id="anythingElse" placeholder="Share your thoughts..."></textarea>
+                    </div>
+
+                    <!-- Q: Email -->
+                    <div class="question">
+                        <span class="question-label">Email address <span class="optional-tag">(Optional)</span></span>
+                        <p class="question-note">The first milestone is 500 responses and the dashboard will go live. We will contact you to share the results. Please share this with educators in your network.</p>
+                        <input type="email" name="contactEmail" id="contactEmail" placeholder="you@example.com">
                     </div>
                 </div>
 
@@ -1052,7 +1094,7 @@
 
             // Simple radio/text fields
             for (let [key, value] of formData.entries()) {
-                if (!['gradeLevels','subjects','digitalLiteracy','additionalTeaching','phoneChallenges','phoneBenefits','supportNeeds'].includes(key)) {
+                if (!['gradeLevels','subjects','digitalLiteracy','additionalTeaching','phoneChallenges','phoneBenefits','supportNeeds','policyRequests'].includes(key)) {
                     data[key] = value;
                 }
             }
@@ -1065,6 +1107,7 @@
             data.phoneChallenges = Array.from(document.querySelectorAll('input[name="phoneChallenges"]:checked')).map(cb => cb.value).join(', ');
             data.phoneBenefits = Array.from(document.querySelectorAll('input[name="phoneBenefits"]:checked')).map(cb => cb.value).join(', ');
             data.supportNeeds = Array.from(document.querySelectorAll('input[name="supportNeeds"]:checked')).map(cb => cb.value).join(', ');
+            data.policyRequests = Array.from(document.querySelectorAll('input[name="policyRequests"]:checked')).map(cb => cb.value).join(', ');
 
             data.timestamp = new Date().toISOString();
 
